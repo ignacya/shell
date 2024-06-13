@@ -46,7 +46,7 @@ fn main() {
                         let _ = std::env::set_current_dir(path);
                     }
                     _ => {
-                        print!("you are homeless xd\n");
+                        print!("no home directory found\n");
                     }
                 }
             } else {
