@@ -1,4 +1,3 @@
-#[allow(unused_imports)]
 use std::collections::HashMap;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -125,5 +124,30 @@ fn main() {
                 }
             },
         };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
+    use std::fs;
+    #[test]
+    fn test_path_finder_existing_command() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        let command_path = temp_dir.path().join("boing");
+        fs::write(&command_path, "").unwrap();
+        let original_path = env::var_os("PATH");
+        let new_path = format!(
+            "{}:{}",
+            temp_dir.path().display(),
+            original_path.clone().unwrap().to_string_lossy()
+        );
+        env::set_var("PATH", &new_path);
+        let result = path_finder("boing");
+        assert_eq!(result, Some(command_path));
+        if let Some(original_path) = original_path {
+            env::set_var("PATH", original_path);
+        }
     }
 }
